@@ -24,6 +24,10 @@ def rnd(x):
 
 def main():
     stocks = json.load(open(os.path.join(ROOT, "stocks.json"), encoding="utf-8"))
+    wl = os.path.join(ROOT, "watchlist.json")
+    if os.path.exists(wl):
+        have = {x["code"] for x in stocks}
+        stocks += [x for x in json.load(open(wl, encoding="utf-8")) if x["code"] not in have]
     os.makedirs(OUT, exist_ok=True)
     tickers = [s["code"] + ".T" for s in stocks]
     df = yf.download(tickers, period="2y", interval="1d", group_by="ticker",
